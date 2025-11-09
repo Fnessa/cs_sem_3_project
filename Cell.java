@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class Cell {
 
-	private static String[] types = {"rock", "empty", "object"};
+	private static String[] types = {"tree", "fire", "rock", "water",};
 	private String type;
 	public String representation;
 
@@ -10,14 +10,20 @@ public class Cell {
 		this.setType(type);
 
 		switch (this.type) {
+			case "tree":
+				this.representation = "T";
+				break;
 			case "rock":
-				this.representation = "R";
+				this.representation = "#";
+				break;
+			case "water":
+				this.representation = "W";
+				break;
+			case "fire":
+				this.representation = "F";
 				break;
 			case "empty":
-				this.representation = "_";
-				break;
-			case "object":
-				this.representation = "x";
+				this.representation = ".";
 				break;
 			default:
 				this.representation = "!";
@@ -36,6 +42,6 @@ public class Cell {
 	}
 	public static String randomType(){
 		Random r = new Random();
-		return types[r.nextInt(2)];
+		return types[r.nextInt(types.length)];
 	}
 }
