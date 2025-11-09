@@ -8,7 +8,23 @@ public class Cell {
 
 	public Cell(String type){
 		this.setType(type);
+	}
 
+	public void setType(String type){
+		this.type = type;
+		this.setRepresentation();
+	}
+	public String getType(){
+		return this.type;
+	}
+	public String getRepresentation(){
+		return this.representation;
+	}
+	public static String randomType(){
+		Random r = new Random();
+		return types[r.nextInt(types.length)];
+	}
+	public void setRepresentation(){
 		switch (this.type) {
 			case "tree":
 				this.representation = "T";
@@ -29,19 +45,5 @@ public class Cell {
 				this.representation = "!";
 				break;
 		}
-	}
-
-	public void setType(String type){
-		this.type = type;
-	}
-	public String getType(){
-		return this.type;
-	}
-	public String getRepresentation(){
-		return this.representation;
-	}
-	public static String randomType(){
-		Random r = new Random();
-		return types[r.nextInt(types.length)];
 	}
 }

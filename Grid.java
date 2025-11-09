@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Grid {
 	public static void main(String[] args) {
 		final int treeAmount = 43;
@@ -17,6 +19,10 @@ public class Grid {
 		outputGrid(grid);
 
 		System.out.printf("Trees: %d, Rocks: %d, Water: %d, Burning trees: %d \n", countObjects(grid)[0], countObjects(grid)[1], countObjects(grid)[2], countObjects(grid)[3]);
+
+		turn(grid);
+		
+		outputGrid(grid);
 	}
 	public static void outputGrid(Cell[][] grid){
 		System.out.println("   1 2 3 4 5 6 7 8 9 10");
@@ -115,5 +121,16 @@ public class Grid {
 			}
 		}
 		return objects;
+	}
+	public static void turn(Cell[][] grid) {
+		Scanner in = new Scanner(System.in);
+		//prompts user for input and gets the selected x and y coordinates
+		System.out.printf("Row to drop water (1 - %d): ", grid[0].length);
+		int x_selected = in.nextInt() - 1;
+		System.out.printf("Column to drop water (1 - %d): ", grid.length);
+		int y_selected = in.nextInt() - 1;
+
+		grid[y_selected][x_selected].setType("water");
+
 	}
 }
