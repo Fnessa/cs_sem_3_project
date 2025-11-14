@@ -27,16 +27,16 @@ public class Cell {
 	public void setRepresentation(){
 		switch (this.type) {
 			case "tree":
-				this.representation = "T";
+				this.representation = "\u001B[32m" + "T" + "\u001B[0m";
 				break;
 			case "rock":
 				this.representation = "#";
 				break;
 			case "water":
-				this.representation = "W";
+				this.representation = "\u001B[34m" + "W" + "\u001B[0m";
 				break;
 			case "fire":
-				this.representation = "F";
+				this.representation = "\u001B[31m" + "F" + "\u001B[0m";
 				break;
 			case "empty":
 				this.representation = ".";
