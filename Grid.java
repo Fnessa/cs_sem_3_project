@@ -146,13 +146,19 @@ public class Grid {
 	}
 
 	//Function for the turn of the player
-	public static void playerTurn(Cell[][] grid) {
+	public static int playerTurn(Cell[][] grid) {
 		Scanner in = new Scanner(System.in);
 		//prompts user for input and gets the selected x and y coordinates
 		System.out.printf("Column to drop water (1 - %d): ", grid[0].length);
 		int x_selected = in.nextInt() - 1;
 		System.out.printf("Row to drop water (1 - %d): ", grid.length);
 		int y_selected = in.nextInt() - 1;
+
+		//Makes sure the input is valid
+		if (x_selected < 0 || x_selected >= grid[0].length || y_selected < 0 || y_selected >= grid.length) {
+			System.out.println("Input is not within the grid, try again.");
+			return playerTurn(grid);
+		}
 
 		//if the selected cell is fire, changes it to water
 		if (grid[y_selected][x_selected].getType().equals("fire")) {
@@ -163,6 +169,7 @@ public class Grid {
 		wave(grid, y_selected, x_selected -1, -1, 0);
 		wave(grid, y_selected -1, x_selected, 0, -1);
 
+		return 0;
 	}
 
 	//Recursive function the waves the player unleashes on the grid.
