@@ -55,59 +55,42 @@ public class Grid {
 	//Places objects on the grid based on the amounts provided.
 	public static void placeObjects(Cell[][] grid, int treeAmount, int fireAmount, int rockAmount, int waterAmount){
 		int treesAdded = 0, fireAdded = 0, rocksAdded = 0, waterAdded = 0;
-		//This loop runs until there are enough of every cell type
-		while (treesAdded < treeAmount || fireAdded < fireAmount|| rocksAdded < rockAmount || waterAdded < waterAmount) {
-			//Goes through grid and attempts to place a random cell at every position, if the position is empty
-			for (int i = 0; i < grid.length; i++) {
-				for (int j = 0; j < grid[i].length; j++) {
-					if (grid[i][j] == null) {
-						String type = Cell.randomType();
-						//if the randomly selected type has not yet enough cells on the grid, places a cell of that type
-						switch (type) {
-							case "tree":
-								if (treesAdded < treeAmount) {
-									grid[i][j] = new Cell(type);
-									treesAdded += 1;
-								}
-								break;
-							case "fire":
-								if (fireAdded < fireAmount) {
-									grid[i][j] = new Cell(type);
-									fireAdded += 1;
-								}
-							case "rock":
-								if (rocksAdded < rockAmount) {
-									grid[i][j] = new Cell(type);
-									rocksAdded += 1;
-								}
-								break;
-							case "water":
-								if (waterAdded < waterAmount) {
-									grid[i][j] = new Cell(type);
-									waterAdded += 1;
-								}
-								break;
-							// empty should not happen, REMOVE
-							//case "empty":
-								//grid[i][j] = new Cell(type);
-								//break;
-							default:
-								//should not be possible
-								grid[i][j] = new Cell("error");
-								break;
-						}
-					}
-				}
-			}
-		}
-		//after the loop has run, places an emtpy cell on every position without a cell
+
+		//fills the grid with cells based on the amounts provided
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
 				if (grid[i][j] == null) {
-					grid[i][j] = new Cell("empty");
+					if (treesAdded < treeAmount) {
+						grid[i][j] = new Cell("tree");
+						treesAdded += 1;
+					}
+					else if (fireAdded < fireAmount) {
+						grid[i][j] = new Cell("fire");
+						fireAdded += 1;
+					}
+					else if (rocksAdded < rockAmount) {
+						grid[i][j] = new Cell("rock");
+						rocksAdded += 1;
+					}
+					else if (waterAdded < waterAmount) {
+						grid[i][j] = new Cell("water");
+						waterAdded += 1;
+					}
+					else { grid[i][j] = new Cell("empty"); }
 				}
 			}
 		}
+
+		//shuffles the grid by exchanging each cell with a random other cell
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				Cell temp = grid[i][j];
+				int rand_i = random.nextInt(grid.length);
+				int rand_j = random.nextInt(grid[rand_i].length);
+				grid[i][j] = grid[rand_i][rand_j];
+				grid[rand_i][rand_j] = temp;
+			}
+		} 
 	}
 
 	//Function that returns an array with the amounts of cells of every type in the provided grid
