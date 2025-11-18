@@ -182,7 +182,7 @@ public class Grid {
 		} else {return false;}
 	}
 
-	//Function for the turn of the enemy, [dramatic pause] Fire. *shocked gasp*
+	//Function for the spread of fire.
 	public static void fireTick(Cell[][] grid){
 		//goes through all tree cells, sets flammable = true if there is a fire next to each tree.
 		for (int i = 0; i < grid.length; i++) {
