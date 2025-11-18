@@ -1,8 +1,8 @@
+// I tried writing comments only when it isn't very obvious what the code does, as writing a comment for everything makes the important ones stand out less to me, I hope that is okay.
 import java.util.Scanner;
 import java.util.Random;
 
 public class Grid {
-	//constants
 	final static int treeAmount = 43;
 	final static int fireAmount = 12;
 	final static int rockAmount = 10;
@@ -12,7 +12,6 @@ public class Grid {
 	final static Random random = new Random();
 
 	public static void main(String[] args) {
-
 		//creates grid
 		Cell[][] grid = new Cell[height][width];
 
@@ -36,11 +35,12 @@ public class Grid {
 
 	}
 
+	//Prints out the current state of the grid.
 	public static void outputGrid(Cell[][] grid){
-		System.out.println("   1 2 3 4 5 6 7 8 9 10");
+		System.out.println("   1 2 3 4 5 6 7 8 9 10"); //indicators for the x axis
 		int line = 1;
 		for (Cell[] column : grid) {
-			System.out.printf("%2d", line);
+			System.out.printf("%2d", line); //indicator for the y axis
 			for (Cell cell : column) {
 				if (cell == null) {
 					System.out.print(" n");
@@ -48,17 +48,21 @@ public class Grid {
 				else { System.out.print(" "+cell.getRepresentation()); }
 			}
 			line += 1;
-			System.out.println("");
+			System.out.printf("\n"); 
 		}
 	}
+
+	//Places objects on the grid based on the amounts provided.
 	public static void placeObjects(Cell[][] grid, int treeAmount, int fireAmount, int rockAmount, int waterAmount){
 		int treesAdded = 0, fireAdded = 0, rocksAdded = 0, waterAdded = 0;
+		//This loop runs until there are enough of every cell type
 		while (treesAdded < treeAmount || fireAdded < fireAmount|| rocksAdded < rockAmount || waterAdded < waterAmount) {
-			//adds random cells to grid
+			//Goes through grid and attempts to place a random cell at every position, if the position is empty
 			for (int i = 0; i < grid.length; i++) {
 				for (int j = 0; j < grid[i].length; j++) {
 					if (grid[i][j] == null) {
 						String type = Cell.randomType();
+						//if the randomly selected type has not yet enough cells on the grid, places a cell of that type
 						switch (type) {
 							case "tree":
 								if (treesAdded < treeAmount) {
@@ -83,17 +87,20 @@ public class Grid {
 									waterAdded += 1;
 								}
 								break;
-							case "empty":
-								grid[i][j] = new Cell(type);
-								break;
+							// empty should not happen, REMOVE
+							//case "empty":
+								//grid[i][j] = new Cell(type);
+								//break;
 							default:
-								grid[i][j] = new Cell("aAAAA");
+								//should not be possible
+								grid[i][j] = new Cell("error");
 								break;
 						}
 					}
 				}
 			}
 		}
+		//after the loop has run, places an emtpy cell on every position without a cell
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
 				if (grid[i][j] == null) {
@@ -102,6 +109,8 @@ public class Grid {
 			}
 		}
 	}
+
+	//Function that returns an array with the amounts of cells of every type in the provided grid
 	public static int[] countObjects(Cell[][] grid) {
 		int[] objects = {
 			0, //trees
@@ -109,6 +118,7 @@ public class Grid {
 			0, //water
 			0 //fire
 		};
+
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
 				if (grid[i][j] != null) {
@@ -134,6 +144,8 @@ public class Grid {
 		}
 		return objects;
 	}
+
+	//Function for the turn of the player
 	public static void playerTurn(Cell[][] grid) {
 		Scanner in = new Scanner(System.in);
 		//prompts user for input and gets the selected x and y coordinates
@@ -153,10 +165,14 @@ public class Grid {
 
 	}
 
+	//Recursive function the waves the player unleashes on the grid.
+	//The return value is unused but returns false when stopped by rocks, water, or the edge of the world.
 	public static boolean wave(Cell[][] grid, int y_selected, int x_selected, int x_direction, int y_direction){
+		//if the wave is outside of the grid returns false
 		if (y_selected < 0 || x_selected < 0 || y_selected + 1 >= grid.length || x_selected + 1 >= grid[0].length) {
 			return false;
 		}
+		//gets next coordinates
 		int next_x = x_selected + x_direction;
 		int next_y = y_selected + y_direction;
 
@@ -164,22 +180,21 @@ public class Grid {
 		if (grid[y_selected][x_selected].getType().equals("rock") || grid[y_selected][x_selected].getType().equals("water")) {
 			return false;
 		}
-		//if the current cell is fire
-		else if (grid[y_selected][x_selected].getType().equals("fire")){
+
+		//if the current cell is fire sets water
+		if (grid[y_selected][x_selected].getType().equals("fire")){
 			grid[y_selected][x_selected].setType("water");
-			//if the next cell is in grid return recursive wave, else return true
-			if (next_x < width && next_x >= 0 && next_y < height && next_y >= 0) {
-				return wave(grid, y_selected + y_direction, x_selected + x_direction, x_direction, y_direction);
-			} else {return true;}
 		}
-		else {
-			if (next_x < width && next_x >= 0 && next_y < height && next_y >= 0) {
-				return wave(grid, y_selected + y_direction, x_selected + x_direction, x_direction, y_direction);
-			} else {return true;}
-		}
+
+		//if the next cell is in grid, return recursive wave, else return false
+		if (next_x < width && next_x >= 0 && next_y < height && next_y >= 0) {
+			return wave(grid, y_selected + y_direction, x_selected + x_direction, x_direction, y_direction);
+		} else {return false;}
 	}
 
+	//Function for the turn of the enemy, [dramatic pause] Fire. *shocked gasp*
 	public static void fireTick(Cell[][] grid){
+		//goes through all tree cells, sets flammable = true if there is a fire next to each tree.
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
 				if (grid[i][j].getType().equals("tree")) {
@@ -207,11 +222,14 @@ public class Grid {
 				}
 			}
 		}
+		//goes through all cells
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
+				//replaces every fire cell with an empty cell
 				if (grid[i][j].getType().equals("fire")) {
 					grid[i][j].setType("empty");
 				}
+				//sets every flammable cell on fire with a 75% chance
 				if (grid[i][j].flammable == true) {
 					if (random.nextDouble() < 0.75) {
 						grid[i][j].setType("fire");
@@ -222,6 +240,7 @@ public class Grid {
 		}
 	}
 
+	//checks if there is fire on the grid
 	public static boolean isFire(Cell[][] grid){
 		boolean fireExists = false;
 		for (int i = 0; i < grid.length; i++) {
