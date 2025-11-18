@@ -5,6 +5,7 @@ public class Cell {
 	private static String[] types = {"tree", "fire", "rock", "water",};
 	private String type;
 	public String representation;
+	public boolean flammable = false;
 
 	public Cell(String type){
 		this.setType(type);
